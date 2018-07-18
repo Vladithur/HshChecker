@@ -1,2 +1,2 @@
 # HshChecker
-A simple java program which uses hashes to check file changes
+A simple program which uses hashes to check for file changes
