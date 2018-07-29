@@ -41,11 +41,11 @@ namespace HshCheckerWindow
             foreach (string f in files)
             {
                 Console.WriteLine(f);
-                if (!File.Exists("." + f + ".md5"))
-                    File.WriteAllText("." + f + ".md5", CalculateMD5(f));
+                if (!File.Exists(f + ".md5"))
+                    File.WriteAllText(f + ".md5", CalculateMD5(f));
                 else
                 {
-                    string temp0 = File.ReadAllText("." + f + ".md5");
+                    string temp0 = File.ReadAllText(f + ".md5");
                     string temp1 = CalculateMD5(f);
                     if (!temp0.Equals(temp1))
                     {
@@ -55,7 +55,7 @@ namespace HshCheckerWindow
                             MessageBox.Show("Please review this file", "Danger", MessageBoxButtons.OK);
                         }
                     }
-                    File.WriteAllText("." + f + ".md5", temp1);
+                    File.WriteAllText(f + ".md5", temp1);
                 }
 
             }
@@ -95,13 +95,21 @@ namespace HshCheckerWindow
                 var filesInDir = Directory.GetFiles(sDir);
                 foreach (string f in filesInDir)
                 {
+                    bool canAdd = true;
                     if (onlyExe)
                     {
                         string subs = f.Substring(f.Length - 3);
                         if (subs == "exe" || subs == "msi")
+                        {
+                            canAdd = false;
+                        }
+                    }
+                    else if (canAdd)
+                    {
+                        string subs = f.Substring(f.Length - 3);
+                        if (subs !=  "md5")
                             files.Add(f);
                     }
-                    else files.Add(f);
                 }
                 foreach (string d in Directory.GetDirectories(sDir))
                 {
