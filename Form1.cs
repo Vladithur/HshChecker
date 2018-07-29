@@ -18,6 +18,10 @@ namespace HshCheckerWindow
         public Form1()
         {
             InitializeComponent();
+            try
+            {
+                textBox.Text = File.ReadAllText("dir.txt");
+            } catch { }
         }
 
         private void checkBoxExe_CheckedChanged(object sender, EventArgs e)
@@ -32,6 +36,7 @@ namespace HshCheckerWindow
 
         public static void check(string folder, bool OnlyExe)
         {
+            File.WriteAllText("dir.txt", folder);
             List<String> files = DirSearch(folder, OnlyExe);
             foreach (string f in files)
             {
@@ -50,6 +55,7 @@ namespace HshCheckerWindow
                             MessageBox.Show("Please review this file", "Danger", MessageBoxButtons.OK);
                         }
                     }
+                    File.WriteAllText("." + f + ".md5", temp1);
                 }
 
             }
@@ -64,6 +70,7 @@ namespace HshCheckerWindow
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
                     textBox.Text = fbd.SelectedPath;
+                    File.WriteAllText("dir.txt", fbd.SelectedPath);
                 }
             }
         }
@@ -85,7 +92,8 @@ namespace HshCheckerWindow
             List<String> files = new List<String>();
             try
             {
-                foreach (string f in Directory.GetFiles(sDir))
+                var filesInDir = Directory.GetFiles(sDir);
+                foreach (string f in filesInDir)
                 {
                     if (onlyExe)
                     {
@@ -102,7 +110,7 @@ namespace HshCheckerWindow
             }
             catch (System.Exception excpt)
             {
-                MessageBox.Show(excpt.Message);
+                //MessageBox.Show(excpt.Message);
             }
 
             return files;
